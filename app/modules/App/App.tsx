@@ -6,7 +6,7 @@ interface AppProps {
 
 class App extends React.Component<AppProps, {}> {
   render() {
-    return <div>Hello world!</div>;
+    return <div>{this.props.children}</div>;
   }
 }
 
