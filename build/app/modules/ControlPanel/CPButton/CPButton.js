@@ -7,24 +7,18 @@ var __extends = (this && this.__extends) || function (d, b) {
 var React = require("react");
 var CPButton = (function (_super) {
     __extends(CPButton, _super);
-    function CPButton(props) {
-        var _this = _super.call(this, props) || this;
-        _this.state = {
-            slides: []
-        };
-        _this.handleClick = _this.handleClick.bind(_this);
-        return _this;
+    function CPButton() {
+        return _super.apply(this, arguments) || this;
     }
-    CPButton.prototype.generateSlides = function () {
-        return;
-    };
     CPButton.prototype.handleClick = function () {
         console.log('in the function');
-        console.log(this.state);
+        this.setState({ slides: ['Hoon'] }, function () {
+            console.log(this.state);
+        });
+        console.log(this.state.slides);
     };
-    ;
     CPButton.prototype.render = function () {
-        return React.createElement("button", { type: 'submit', id: 'CPButton', onClick: this.handleClick }, "+");
+        return React.createElement("button", { type: 'submit', id: 'CPButton', onClick: this.handleClick.bind(this) }, "+");
     };
     return CPButton;
 }(React.Component));
