@@ -59,8 +59,8 @@ class CurrentSlideViewComponent extends React.Component<CurrentSlideProps, { edi
                   x: x ? x : 0,
                   y: y ? y : 0
                 } }
-                // Ensure the DOM is ready when switching views so have access
-                // to the edit-slide-view div
+                maxWidth={ editSlideViewEl ? editSlideViewEl.clientWidth : width }
+                maxHeight={ editSlideViewEl ? editSlideViewEl.clientHeight : height }
                 bounds={ editSlideViewEl ? {
                   top: 0,
                   right: isInPresenterMode ? y : editSlideViewEl.clientWidth - width,

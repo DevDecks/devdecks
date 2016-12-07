@@ -1,6 +1,8 @@
 import * as React from 'react';
 import './edit-view.scss';
 
+const Rnd = require('react-rnd');
+
 import {
   ControlPanel,
   CurrentSlideView,
@@ -8,22 +10,14 @@ import {
   ToolBar,
 } from '../..';
 
-
 const EditView = () => (
-  <div>
-    <div id="col-1">
+  <div id="container">
 
-      <div className="mini-slide-view">
-        <MiniSlidesPanel />
-      </div>
-
-      <div className="slide-control-panel">
-        <ControlPanel />
-      </div>
-
+    <div id="mini-slide-panel">
+      <MiniSlidesPanel />
     </div>
 
-    <div id="col-2">
+    <div id="slide">
 
       <div id="toolbar">
         <ToolBar />
@@ -33,8 +27,30 @@ const EditView = () => (
         <CurrentSlideView />
       </div>
 
-      {/*<div className="single-slide-views">
+    </div>
 
+    <div id="control-panel">
+      <Rnd
+        isResizable={{
+          top: false,
+          right: false,
+          bottom: false,
+          left: false,
+          topRight: false,
+          bottomRight: false,
+          bottomLeft: false,
+          topLeft: false
+        }}
+        bounds={{
+          right: 0,
+          left: 0
+        }} >
+        <ControlPanel />
+      </Rnd>
+    </div>
+
+    {
+      /*<div id="single-slide-views">
         <ul>
           <a href='#'><li className="mini-single-slide">slide1.0</li></a>
           <a href='#'><li className="mini-single-slide">slide1.1</li></a>
@@ -50,10 +66,9 @@ const EditView = () => (
           <a href='#'><li className="mini-single-slide">slide1.11</li></a>
           <a href='#'><li className="mini-single-slide">slide1.12</li></a>
         </ul>>
+      </div>*/
+    }
 
-      </div>*/}
-
-    </div>
   </div>
 );
 

@@ -1,8 +1,9 @@
 .mini-slide {
-  height: 96px;
-  width: 144px;
-  margin: 15px auto;
+  position: relative;
+  width: 128px;
+  height: 72px;
   border: 2px solid #c0c0c0;
+  margin: 15px auto;
 }
 
 .mini-slide-counter {

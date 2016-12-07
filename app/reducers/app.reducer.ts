@@ -4,6 +4,8 @@ const initialAppState = {
   currentSlide: 0,
   currentSelectedPlugin: { slideNumber: 0, pluginNumber: 0 },
   isFullscreen: false,
+  slidesDimension: { width: 1280, height: 720 },
+  thumbnailsDimension: { width: 128, height: 72 },
 };
 
 const appReducer = (state: any = initialAppState, action: any) => {
