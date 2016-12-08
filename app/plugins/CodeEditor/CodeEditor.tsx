@@ -36,7 +36,7 @@ const CodeEditor = ({ height, width, pluginNumber, pluginState, slideNumber, upd
       }}>
       run code
     </button>
-    <div className="terminal">{pluginState.snippetEval}</div>
+    <div className="terminal">{ pluginState.snippetEval }</div>
   </div>
 );
 
