@@ -1,8 +1,5 @@
 /* NOTE: Variables do not work within calc function */
 
-// Control Panel
-$controlPanelHeight: 150px;
-
 // Minislide Panel
 $miniSlideViewWidth: 250px;
 
@@ -52,6 +49,7 @@ ul {
   height: 100vh;
   min-width: $miniSlideViewWidth;
   overflow-y: auto;
+  overflow-x: hidden;
   border-right: .5px solid black;
 }
 

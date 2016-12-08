@@ -1,8 +1,6 @@
 import * as React from 'react';
 import './edit-view.scss';
 
-const Rnd = require('react-rnd');
-
 import {
   ControlPanel,
   CurrentSlideView,
@@ -10,7 +8,16 @@ import {
   ToolBar,
 } from '../..';
 
-const EditView = () => (
+const Rnd = require('react-rnd');
+
+interface EditViewProps {
+  deviceDimension: {
+    width: number;
+    height: number;
+  };
+}
+
+const EditView = ({ deviceDimension }: EditViewProps) => (
   <div id="container">
 
     <div id="mini-slide-panel">
@@ -23,7 +30,7 @@ const EditView = () => (
         <ToolBar />
       </div>
 
-      <div id="edit-slide-view">
+      <div id="edit-slide-view" style={{ width: deviceDimension.width, height: deviceDimension.height }}>
         <CurrentSlideView />
       </div>
 

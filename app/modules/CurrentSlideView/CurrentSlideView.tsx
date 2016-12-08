@@ -11,11 +11,18 @@ const Rnd = require('react-rnd');
 //   OptionsBar,
 // } from '..';
 
+interface IDimension {
+  width: number;
+  height: number;
+}
+
 interface CurrentSlideProps {
   currentSlide?: any;
-  currentSelectedPlugin?: any,
+  currentSelectedPlugin?: any;
+  deviceDimension?: IDimension;
   isInPresenterMode?: boolean;
   setActivePlugin?: Function;
+  slidesDimension?: IDimension;
   slideNumber?: number;
   updateCurrentSlide?: Function;
 }
@@ -116,7 +123,9 @@ class CurrentSlideViewComponent extends React.Component<CurrentSlideProps, { edi
 const mapStateToProps = (state: any) => ({
   currentSlide: state.slides[state.app.currentSlide],
   currentSelectedPlugin: state.app.currentSelectedPlugin,
+  deviceDimension: state.app.deviceDimension,
   isInPresenterMode: state.app.isFullscreen,
+  slidesDimension: state.app.slidesDimension,
   slideNumber: state.app.currentSlide,
 });
 
