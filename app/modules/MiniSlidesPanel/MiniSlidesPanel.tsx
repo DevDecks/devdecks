@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import MiniSlide from './MiniSlide/MiniSlide';
 import { goToSlide } from '../../actions/app.actions';
+import './mini-slide-panel.scss';
+
+import { Slide } from '..';
+import { Scale } from '../../sharedComponents';
 
 interface IDimensions {
   width: number;
@@ -11,30 +14,33 @@ interface IDimensions {
 interface MiniSlidesPanelProps {
   goToSlide?: Function;
   slides?: any;
-  deviceDimension?: IDimensions;
-  slidesDimension?: IDimensions;
   thumbnailsDimension?: IDimensions;
 }
 
 class MiniSlidesPanelComponent extends React.Component<MiniSlidesPanelProps, {}> {
   render() {
-    const { goToSlide, slides, deviceDimension, slidesDimension, thumbnailsDimension } = this.props;
+    const { goToSlide, slides, thumbnailsDimension } = this.props;
 
     const scale = Math.min(
-      thumbnailsDimension.width / slidesDimension.width,
-      thumbnailsDimension.height / slidesDimension.height
+      thumbnailsDimension.width / window.screen.width,
+      thumbnailsDimension.height / window.screen.height
     );
 
     return (
-      <ul>
+      <ul id="mini-slide-panel">
         { 
           slides.map((slide: any, key: number) => (
-            <MiniSlide
-              key={ key }
-              index={ key }
-              goToSlide={ goToSlide.bind(this, key) }
-              scale={ scale }
-              slide={ slides[key] } />
+            <div key={ key }>
+              <span className="mini-slide-counter">{ key }</span>
+              <div className="mini-slide" onClick={ goToSlide.bind(this, key) }>
+                <Scale isFullscreen={ false } scale={ scale }>
+                  <Slide
+                    scale={ scale }
+                    slide={ slide }
+                    smart={ false } />
+                </Scale>
+              </div>
+            </div>
           ))
         }
       </ul>
@@ -42,10 +48,8 @@ class MiniSlidesPanelComponent extends React.Component<MiniSlidesPanelProps, {}>
   }
 }
 
-const mapStateToProps = (state: any) => ({
-  deviceDimension: state.app.deviceDimension,
+const mapStateToProps = (state: any, props: any) => ({
   slides: state.slides,
-  slidesDimension: state.app.slidesDimension,
   thumbnailsDimension: state.app.thumbnailsDimension,
 });
 

@@ -11,12 +11,16 @@ import plugins from '../../plugins';
 
 interface ToolBarComponentProps {
   addPluginToCurrentSlide: React.MouseEventHandler<HTMLElement>;
+  slidesDimension: {
+    width: number;
+    height: number;
+  }
   slideNumber: number;
 }
 
 class ToolBarComponent extends React.Component<ToolBarComponentProps, {}> {
   public render() {
-    const { addPluginToCurrentSlide, slideNumber } = this.props;
+    const { addPluginToCurrentSlide, slidesDimension, slideNumber } = this.props;
     return (
       <div id="tb">
         <ToolBarMenu className='pt-large tb--menu'>
@@ -27,10 +31,12 @@ class ToolBarComponent extends React.Component<ToolBarComponentProps, {}> {
                 key = { key }
                 iconName = { plugin.icon }
                 onClick = { addPluginToCurrentSlide.bind(this, {
-                  state: { 
+                  state: {
                     value: '',
                     width: 300,
                     height: 200,
+                    left: slidesDimension.width / 2,
+                    top: 100
                   },
                   ...plugin,
                 }, slideNumber )}
@@ -44,7 +50,10 @@ class ToolBarComponent extends React.Component<ToolBarComponentProps, {}> {
   }
 }
 
-const mapStateToProps = (state: any) => ({ slideNumber: state.app.currentSlide });
+const mapStateToProps = (state: any) => ({
+  slidesDimension: state.app.slidesDimension,
+  slideNumber: state.app.currentSlide
+});
 
 const mapDispatchToProps = (dispatch: any) => ({
   addPluginToCurrentSlide: (plugin: any, slideNumber: number) => dispatch(addPluginToCurrentSlide(plugin, slideNumber)),
