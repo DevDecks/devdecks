@@ -2,8 +2,16 @@
   width: 192px;
   height: 108px;
   position: relative;
+  background-color: white;
   border: 2px solid #c0c0c0;
+  box-shadow: 1px 1px 3px #c0c0c0;
   margin: 15px auto;
+}
+
+.current-mini-slide {
+  border: 4px solid #106ba3 !important;
+  border-radius: 5px;
+  box-shadow: 1px 1px 8px #106ba3 !important;
 }
 
 .mini-slide-counter {
