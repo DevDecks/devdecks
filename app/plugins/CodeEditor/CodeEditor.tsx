@@ -25,17 +25,17 @@ const CodeEditor = ({ height, width, pluginNumber, pluginState, scale, slideNumb
   const { fontSize, snippet, snippetEval } = pluginState;
 
   let updateSnippetDebounce: any;
-  if (updateCurrentSlide) updateSnippetDebounce = debounce(updateCurrentSlide, 900);
+  if (updateCurrentSlide) updateSnippetDebounce = debounce(updateCurrentSlide, 50);
 
   return (
-    <div>
+    <div style={{ backgroundColor:"rgba(50, 50, 50, .2)"}}>
       <AceEditor 
         mode='javascript'
         theme='monokai'
         tabSize={2}
         fontSize={ fontSize ? DEFAULT_FONT_SIZE * (fontSize / 100) : DEFAULT_FONT_SIZE * 3 }
-        height={`${ height }px`}
-        width={`${ width }px`}
+        height={`${ height - 50 }px`}
+        width={`${ width - 1 }px`}
         onChange={ (snippet: string) => updateSnippetDebounce(pluginNumber, slideNumber, { snippet }) }
         value={ snippet }
       />
@@ -44,10 +44,10 @@ const CodeEditor = ({ height, width, pluginNumber, pluginState, scale, slideNumb
         onClick={() => {
           const snippetEval: any = eval(snippet);
           updateCurrentSlide(pluginNumber, slideNumber, { snippetEval })
-        }}>
-        run code
+      }}>
+        submit
       </button>
-      <div className="terminal">{ snippetEval }</div>
+      <div className="terminal">{snippetEval}</div>
     </div>
   );
 }

@@ -12,6 +12,7 @@ interface IDimensions {
 }
 
 interface MiniSlidesPanelProps {
+  currentSlideNumber?: number;
   goToSlide?: Function;
   slides?: any;
   thumbnailsDimension?: IDimensions;
@@ -19,7 +20,7 @@ interface MiniSlidesPanelProps {
 
 class MiniSlidesPanelComponent extends React.Component<MiniSlidesPanelProps, {}> {
   render() {
-    const { goToSlide, slides, thumbnailsDimension } = this.props;
+    const { currentSlideNumber, goToSlide, slides, thumbnailsDimension } = this.props;
 
     const scale = Math.min(
       thumbnailsDimension.width / window.screen.width,
@@ -32,7 +33,9 @@ class MiniSlidesPanelComponent extends React.Component<MiniSlidesPanelProps, {}>
           slides.map((slide: any, key: number) => (
             <div key={ key }>
               <span className="mini-slide-counter">{ key }</span>
-              <div className="mini-slide" onClick={ goToSlide.bind(this, key) }>
+              <div
+                className={ currentSlideNumber === key? "mini-slide current-mini-slide" : "mini-slide" }
+                onClick={ goToSlide.bind(this, key) }>
                 <Scale isFullscreen={ false } scale={ scale }>
                   <Slide
                     scale={ scale }
@@ -49,6 +52,7 @@ class MiniSlidesPanelComponent extends React.Component<MiniSlidesPanelProps, {}>
 }
 
 const mapStateToProps = (state: any, props: any) => ({
+  currentSlideNumber: state.app.currentSlide,
   slides: state.slides,
   thumbnailsDimension: state.app.thumbnailsDimension,
 });
