@@ -1,8 +1,5 @@
 import * as React from 'react';
-import { Menu, MenuDivider, MenuItem, Popover, Position } from "@blueprintjs/core";
-
-const brace = require('brace');
-const AceEditor = require('react-ace').default;
+import { Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
 
 interface CodeThemeProps {
   pluginState: any;

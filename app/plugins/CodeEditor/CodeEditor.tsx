@@ -49,13 +49,10 @@ const CodeEditor = ({ height, width, pluginNumber, pluginState, scale, slideNumb
   const DEFAULT_LANGUAGE = 'javascript';
   const DEFAULT_THEME = 'monokai';
 
-  const { fontSize, language, snippet, snippetEval, theme } = pluginState;
-  let setLang: string;
-  if(language === 'C++') setLang = 'c_cpp';
-  else if (language) setLang = language.toLowerCase();
+  const { fontSize, snippet, snippetEval, theme } = pluginState;
+  let { language } = pluginState;
 
-  let setTheme: string;
-  if (theme) setTheme = theme.toLowerCase();
+  if (language === 'C++') language = 'c_cpp';
 
   let updateSnippetDebounce: any;
   if (updateCurrentSlide) updateSnippetDebounce = debounce(updateCurrentSlide, 50);
@@ -63,12 +60,12 @@ const CodeEditor = ({ height, width, pluginNumber, pluginState, scale, slideNumb
   return (
     <div style={{ backgroundColor:"rgba(50, 50, 50, .2)"}}>
       <AceEditor
-        mode={ setLang ? setLang : DEFAULT_LANGUAGE }
-        theme={ setTheme? setTheme : DEFAULT_THEME }
-        tabSize={2}
+        mode={ language ? language.toLowerCase() : DEFAULT_LANGUAGE }
+        theme={ theme ? theme.toLowerCase() : DEFAULT_THEME }
+        tabSize={ 2 }
         fontSize={ fontSize ? DEFAULT_FONT_SIZE * (fontSize / 100) : DEFAULT_FONT_SIZE * 3 }
-        height={`${ height - 50 }px`}
-        width={`${ width - 1 }px`}
+        height={ `${ height - 50 }px` }
+        width={ `${ width - 1 }px` }
         onChange={ (snippet: string) => updateSnippetDebounce(pluginNumber, slideNumber, { snippet }) }
         value={ snippet }
       />
@@ -80,7 +77,7 @@ const CodeEditor = ({ height, width, pluginNumber, pluginState, scale, slideNumb
       }}>
         submit
       </button>
-      <div className="terminal">{snippetEval}</div>
+      <div className="terminal">{ snippetEval }</div>
     </div>
   );
 }
