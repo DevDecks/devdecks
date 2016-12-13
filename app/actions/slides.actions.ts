@@ -18,7 +18,15 @@ export function addSlide(currentSlide: number) {
 export function deleteSlide(slideToDelete: number) {
   return {
     type: constants.DELETE_SLIDE,
-    slideToDelete, 
+    slideToDelete,
+  };
+}
+
+export function deleteCurrentPlugin(pluginNumber: number, slideNumber: number) {
+  return {
+    type: constants.DELETE_CURRENT_PLUGIN,
+    pluginNumber,
+    slideNumber,
   };
 }
 
@@ -30,4 +38,3 @@ export function updateCurrentSlide(pluginNumber: number, slideNumber: number, ch
     slideNumber,
   };
 }
-

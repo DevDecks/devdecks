@@ -4,16 +4,18 @@ import { connect } from 'react-redux';
 import FontSize from './FontSize/FontSize';
 import CodeLang from './CodeOptions/CodeLang';
 import CodeTheme from './CodeOptions/CodeTheme';
+import DeletePlugin from './DeletePlugin/DeletePlugin';
 
 interface OptionsBarProps {
   currentSelectedPlugin: any;
+  deleteCurrentPlugin: any;
   pluginNumber: number;
   pluginState: any;
   slideNumber: number;
   updateCurrentSlide: Function;
 }
 
-const OptionsBar = ({ currentSelectedPlugin, pluginNumber, pluginState, slideNumber, updateCurrentSlide }: OptionsBarProps) => {
+const OptionsBar = ({ currentSelectedPlugin, deleteCurrentPlugin, pluginNumber, pluginState, slideNumber, updateCurrentSlide }: OptionsBarProps) => {
   const shouldBeHidden: boolean = currentSelectedPlugin.slideNumber !== slideNumber || currentSelectedPlugin.pluginNumber !== pluginNumber ? true : false;
 
   return (
@@ -27,6 +29,8 @@ const OptionsBar = ({ currentSelectedPlugin, pluginNumber, pluginState, slideNum
         <CodeTheme
           pluginState={ pluginState }
           updateCurrentPlugin={ updateCurrentSlide.bind(this, pluginNumber, slideNumber) } />
+        <DeletePlugin
+          deleteCurrentPlugin={ deleteCurrentPlugin.bind(this, pluginNumber, slideNumber) } />
     </div>
   );
 };

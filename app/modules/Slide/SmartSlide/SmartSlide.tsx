@@ -7,6 +7,7 @@ const Rnd = require('react-rnd');
 
 interface SmartSlideProps {
   currentSelectedPlugin: any;
+  deleteCurrentPlugin?: any;
   isInPresenterMode: boolean;
   scale: number;
   setActivePlugin: Function;
@@ -19,8 +20,9 @@ interface SmartSlideProps {
   updateCurrentSlide: Function;
 }
 
-const SmartSlide = ({ 
+const SmartSlide = ({
   currentSelectedPlugin,
+  deleteCurrentPlugin,
   isInPresenterMode,
   scale,
   setActivePlugin,
@@ -81,15 +83,16 @@ const SmartSlide = ({
               } } >
               {
                 !isInPresenterMode ?
-                  <OptionsBar 
+                  <OptionsBar
                     currentSelectedPlugin={ currentSelectedPlugin }
+                    deleteCurrentPlugin={ deleteCurrentPlugin }
                     pluginNumber={ key }
-                    pluginState={ state } 
-                    slideNumber={ slideNumber } 
+                    pluginState={ state }
+                    slideNumber={ slideNumber }
                     updateCurrentSlide={ updateCurrentSlide } /> :
                   null
               }
-              <Plugin 
+              <Plugin
                 width={ state.width }
                 height={ state.height }
                 currentSlide={ slide }

@@ -17,12 +17,18 @@ const slidesReducer = (state: any = initialSlidesState, action: any) => {
       return slides;
     }
 
+    case constants.DELETE_CURRENT_PLUGIN: {
+      const slides = cloneDeep(state);
+      slides[action.slideNumber].plugins.splice(action.pluginNumber, 1);
+      return slides;
+    }
+
     case constants.DELETE_SLIDE: {
       const slides = state.slice();
       slides.splice(action.slideToDelete, 1);
       return slides;
     }
-    
+
     case constants.UPDATE_CURRENT_SLIDE: {
       const { pluginNumber, slideNumber } = action;
       const slides = cloneDeep(state);
