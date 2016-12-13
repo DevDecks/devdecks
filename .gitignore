@@ -38,7 +38,7 @@ app/bundle.js
 app/bundle.js.map
 app/style.css
 app/style.css.map
-build/
+build
 dist
 main.js
 main.js.map

@@ -1,5 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { addPluginToCurrentSlide } from 'actions/slides.actions';
+import plugins from 'plugins';
+import './toolbar.scss';
+
 import {
   Menu as ToolBarMenu,
   MenuItem as ToolBarItem,
@@ -7,13 +11,6 @@ import {
   PopoverInteractionKind,
   Position
 } from '@blueprintjs/core';
-import { addPluginToCurrentSlide } from '../../actions/slides.actions';
-import './toolbar.scss';
-
-// Import from plugins
-// Need a way to dynamically update this file based on
-// a list of plugins available
-import plugins from '../../plugins';
 
 interface ToolBarComponentProps {
   addPluginToCurrentSlide: React.MouseEventHandler<HTMLElement>;
@@ -28,7 +25,7 @@ class ToolBarComponent extends React.Component<ToolBarComponentProps, {}> {
   public render() {
     const { addPluginToCurrentSlide, slidesDimension, slideNumber } = this.props;
     return (
-      <div id="tb">
+      <div id="toolbar">
         <ToolBarMenu className='pt-large tb--menu'>
           {
             // NOTE: Depending on plugin type, it should render different initial states
@@ -41,16 +38,18 @@ class ToolBarComponent extends React.Component<ToolBarComponentProps, {}> {
                 useSmartPositioning={ false }>
                 <ToolBarItem
                   iconName = { plugin.icon }
-                  onClick = { addPluginToCurrentSlide.bind(this, {
-                    state: { 
-                      value: '',
-                      width: 300,
-                      height: 200,
-                      left: slidesDimension.width / 2,
-                      top: 100
-                    },
-                    ...plugin,
-                  }, slideNumber )}
+                  onClick = { 
+                    addPluginToCurrentSlide.bind(this, {
+                      ...plugin,
+                      // App default states
+                      state: {
+                        left: slidesDimension.width / 2,
+                        top: 100,
+                        // Plugin's default state
+                        ...plugin.state
+                      },
+                    }, slideNumber )
+                  }
                   text = { plugin.text }
                 />
               </Popover>
