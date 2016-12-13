@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from 'react-redux';
-import { updateCurrentSlide } from 'actions/slides.actions';
+import { updateCurrentSlide, deleteCurrentPlugin } from 'actions/slides.actions';
 import { setActivePlugin } from 'actions/app.actions';
 import './slide.scss';
 
@@ -11,6 +11,7 @@ const Rnd = require('react-rnd');
 
 interface SlideProps {
   currentSelectedPlugin?: any;
+  deleteCurrentPlugin?: any;
   deviceDimension: {
     width: number;
     height: number;
@@ -33,6 +34,7 @@ class SlideComponent extends React.Component<SlideProps, {}> {
   public render() {
     const {
       currentSelectedPlugin,
+      deleteCurrentPlugin,
       deviceDimension,
       isInPresenterMode,
       scale,
@@ -48,6 +50,7 @@ class SlideComponent extends React.Component<SlideProps, {}> {
       smart ?
         <SmartSlide
           currentSelectedPlugin={ currentSelectedPlugin }
+          deleteCurrentPlugin={ deleteCurrentPlugin }
           isInPresenterMode={ isInPresenterMode }
           scale={ scale }
           setActivePlugin={ setActivePlugin }
@@ -69,6 +72,7 @@ const mapStateToProps = (state: any, props: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
+  deleteCurrentPlugin: (pluginNumber: number, slideNumber: number) => dispatch(deleteCurrentPlugin(pluginNumber, slideNumber)),
   setActivePlugin: (pluginNumber: number, slideNumber: number) => dispatch(setActivePlugin(pluginNumber, slideNumber)),
   updateCurrentSlide: (pluginNumber: number, slideNumber: number, changes: Object) => dispatch(updateCurrentSlide(pluginNumber, slideNumber, changes)),
 });
