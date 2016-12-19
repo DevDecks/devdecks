@@ -2,7 +2,10 @@
 // Signature: import { plugin } from { location }
 
 import CodeEditor from './CodeEditor/CodeEditor';
+import CodeEditorOptions from './CodeEditor/OptionsMenu';
+
 import Image from './AddImage/AddImage';
+import ImageOptions from './AddImage/OptionsMenu';
 
 import TextBox from './TextBox/TextBox';
 import TextBoxOptions from './TextBox/OptionsMenu';
@@ -12,14 +15,40 @@ export default [
   {
     component: TextBox,
     icon: 'new-text-box',
-    moduleName: 'TextBox',
+    moduleName: 'devdecks-textbox',
     // change to tooltip
     name: 'Text Box',
     optionsMenuComponent: TextBoxOptions,
     state: {
       value: '',
+      width: 600,
+      height: 200,
+    },
+  },
+  {
+    component: Image,
+    icon: 'media',
+    moduleName: 'devdecks-image',
+    // change to tooltip
+    name: 'Image',
+    optionsMenuComponent: ImageOptions,
+    state: {
+      value: '',
       width: 300,
       height: 200,
+    },
+  },
+  {
+    component: CodeEditor,
+    icon: 'code',
+    moduleName: 'devdecks-code-editor',
+    // change to tooltip
+    name: 'CodeEditor',
+    optionsMenuComponent: CodeEditorOptions,
+    state: {
+      value: '',
+      width: 800,
+      height: 420,
     },
   },
   // {

@@ -1,10 +1,11 @@
 // blueprintjs
 .pt-menu {
-  min-width: 0;
+  min-width: 0 !important;
+  padding: 0 !important;
 }
 
 .pt-large .pt-menu-item::before {
-  margin: 0 5px;
+  margin: 0 5px !important;
 }
 
 .pt-transition-container {
