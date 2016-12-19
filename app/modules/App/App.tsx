@@ -8,6 +8,8 @@ import '@blueprintjs/core/dist/blueprint.css';
 import EditView from './EditView/EditView';
 import FullScreenView from './FullScreenView/FullScreenView';
 
+const { ActionCreators } = require('redux-undo');
+
 interface IDimensions {
   width: number;
   height: number;
@@ -28,6 +30,7 @@ interface AppComponentProps {
   toggleFullScreen: any;
   updateDeviceDimension: Function;
   updateSlidesDimension: Function;
+  undo: Function;
 }
 
 class AppComponent extends React.Component<AppComponentProps, {}> {
@@ -113,10 +116,12 @@ class AppComponent extends React.Component<AppComponentProps, {}> {
       slideNumber,
       slidesDimension,
       toggleFullScreen,
+      undo,
     } = this.props;
 
     return (
       <main>
+        <button onClick={() => (undo())}>undo</button>
         { 
           isFullScreen ?
             <FullScreenView slide={ slide } /> :
@@ -125,7 +130,8 @@ class AppComponent extends React.Component<AppComponentProps, {}> {
               lastSavedSlideDimensions={ lastSavedSlideDimensions }
               slide={ slide }
               slidesDimension={ slidesDimension }
-              thumbnailsDimension = {{ width: deviceDimension.width / 10, height: deviceDimension.height/ 10 }} />
+              thumbnailsDimension={{ width: deviceDimension.width / 10, height: deviceDimension.height / 10 }}
+            />
         }
       </main>
     );
@@ -133,14 +139,14 @@ class AppComponent extends React.Component<AppComponentProps, {}> {
 }
 
 const mapStateToProps= (state: any) => ({
-  deviceDimension: state.app.deviceDimension,
-  isDragging: state.app.isDragging,
-  isFullScreen: state.app.isFullScreen,
-  lastSavedSlideDimensions: state.app.lastSavedSlideDimensions,
-  slide: state.slides[state.app.currentSlide],
-  slideNumber: state.app.currentSlide,
-  slides: state.slides,
-  slidesDimension: state.app.slidesDimension,
+  deviceDimension: state.app.present.deviceDimension,
+  isDragging: state.app.present.isDragging,
+  isFullScreen: state.app.present.isFullScreen,
+  lastSavedSlideDimensions: state.app.present.lastSavedSlideDimensions,
+  slide: state.slides.present[state.app.present.currentSlide],
+  slideNumber: state.app.present.currentSlide,
+  slides: state.slides.present,
+  slidesDimension: state.app.present.slidesDimension,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -150,6 +156,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   toggleFullScreen: () => dispatch(toggleFullScreen()),
   updateDeviceDimension: (newDeviceDimension: { width: number, height: number }) => dispatch(updateDeviceDimension(newDeviceDimension)),
   updateSlidesDimension: (slidesDimension: { width: number, height: number }) => dispatch(updateSlidesDimension(slidesDimension)),
+  undo: () => dispatch(ActionCreators.undo())
 });
 
 const App = connect(mapStateToProps, mapDispatchToProps)(AppComponent as any);

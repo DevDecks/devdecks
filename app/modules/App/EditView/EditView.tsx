@@ -10,6 +10,7 @@ import {
 
 import { Scale } from 'sharedComponents';
 
+
 interface IDimensions {
   width: number;
   height: number;
@@ -29,7 +30,6 @@ const EditView = ({ isDragging, lastSavedSlideDimensions, slide, slidesDimension
     <div id="container">
 
       <MiniSlidesPanel />
-
       <div id="main-content-wrapper">
         
         <ToolBar />

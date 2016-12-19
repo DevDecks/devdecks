@@ -36,7 +36,8 @@ class FullscreenViewComponent extends React.Component {
     }
 }
 function mapStateToProps(state) {
-    return { slides: state.app.slides, currentSlide: state.app.currentSlide };
+    console.log("*******", state.app.present.slides)
+    return { slides: state.app.present.slides, currentSlide: state.app.present.currentSlide };
 }
 function mapDispatchToProps(dispatch) {
     return {

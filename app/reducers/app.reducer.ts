@@ -1,6 +1,10 @@
 import { remote } from 'electron';
 import * as constants from 'constants/app.constants';
 
+const undoable = require('redux-undo').default;
+// const { ignoreActions } = require('redux-ignore');
+// const { excludeAction, includeAction } = require('redux-undo');
+
 const deviceDimension = {
   width: window.screen.width,
   height: window.screen.height
@@ -79,4 +83,14 @@ const appReducer = (state: any = initialAppState, action: any) => {
   }
 };
 
-export { appReducer };
+const ignoreActions:any = [constants.TOGGLE_GUIDELINES];
+const undoableAppReducer = undoable(appReducer, {
+  filter: function filterActions(action: any, currentState: any, previousHistory: any) {
+    // if (action.type === 'SET_ACTIVE_PLUGIN') return true;
+    // if (previousHistory.currentSlide === previousHistory.currentSelectedPlugin.slideNumber) 
+    return false;
+  }
+});
+
+
+export { undoableAppReducer };

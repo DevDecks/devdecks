@@ -1,7 +1,8 @@
 import * as React from "react";
 import { connect } from 'react-redux';
 import { OptionsBar } from 'modules';
-import { setActivePlugin, toggleGuidelines } from 'actions/app.actions';
+import { goToSlide, setActivePlugin, toggleGuidelines } from 'actions/app.actions';
+// import { toggleGuidelines } from 'actions/notUndoable.actions';
 import { updateCurrentPlugin } from 'actions/slides.actions';
 import './smart-slide.scss';
 
@@ -12,6 +13,7 @@ interface SmartSlideProps {
     pluginNumber: number;
     slideNumber: number;
   };
+  goToSlide?: Function;
   isInPresenterMode?: boolean;
   scale: number;
   setActivePlugin?: Function;
@@ -31,13 +33,19 @@ class SmartSlide extends React.Component<SmartSlideProps, {}> {
   // This is to update the position via Rnd updatePosition API
   // Otherwise, there is a bug with slides rendering its position
   // based on the last movement of the last plugin
+  // Added functionality to make sure that the current slide changes to the correct slide
+  // when undoing actions with the undo functionality 
   public componentDidUpdate({ slideNumber: _slideNumber }: { slideNumber: number }): void {
-    const { slide, slideNumber } = this.props;
-    if (slideNumber === _slideNumber) return null;
-    for (const key in this.rnd) {
-      if (!this.rnd[key]) return null;
-      const { state: { left: x, top: y } } = this.props.slide.plugins[key];
-      this.rnd[key].updatePosition({ x, y });
+    const { currentSelectedPlugin, goToSlide, slide, slideNumber } = this.props;
+    if (slideNumber !== _slideNumber) {
+      for (const key in this.rnd) {
+        if (!this.rnd[key]) return null;
+        const { state: { left: x, top: y } } = this.props.slide.plugins[key];
+        this.rnd[key].updatePosition({ x, y });
+      }
+    }
+    if (slideNumber !== currentSelectedPlugin.slideNumber) { 
+      goToSlide(currentSelectedPlugin.slideNumber);
     }
   }
 
@@ -124,14 +132,15 @@ class SmartSlide extends React.Component<SmartSlideProps, {}> {
 }
 
 const mapStateToProps = (state: any, props: any) => ({
-  currentSelectedPlugin: state.app.currentSelectedPlugin,
-  isInPresenterMode: state.app.isInPresenterMode,
-  slide: state.slides[state.app.currentSlide],
-  slideNumber: state.app.currentSlide,
-  slidesDimension: state.app.slidesDimension,
+  currentSelectedPlugin: state.app.present.currentSelectedPlugin,
+  isInPresenterMode: state.app.present.isInPresenterMode,
+  slide: state.slides.present[state.app.present.currentSlide],
+  slideNumber: state.app.present.currentSlide,
+  slidesDimension: state.app.present.slidesDimension,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
+  goToSlide: (slideNumber: number) => dispatch(goToSlide(slideNumber)),
   setActivePlugin: (pluginNumber: number, slideNumber: number) => dispatch(setActivePlugin(pluginNumber, slideNumber)),
   toggleGuidelines: () => dispatch(toggleGuidelines()),
   updateCurrentPlugin: (pluginNumber: number, slideNumber: number, changes: Object) => dispatch(updateCurrentPlugin(pluginNumber, slideNumber, changes)),
