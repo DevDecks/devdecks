@@ -3,85 +3,51 @@ import { connect } from 'react-redux';
 import { Button } from '@blueprintjs/core';
 import { goToSlide } from 'actions/app.actions';
 import { addSlide, deleteSlide } from 'actions/slides.actions'; 
-import { saveLastSlideDimensions, toggleFullScreen } from 'actions/app.actions'; 
+import { saveLastSlideDimensions, setActivePlugin, toggleFullScreen } from 'actions/app.actions';
 import './control-panel.scss';
 
-const Rnd = require('react-rnd');
-
 interface ControlPanelProps {
-  addSlide?: any;
-  currentSlide?: number;
-  deleteSlide?: any;
-  goToSlide?: any;
-  numberOfSlides?: number;
-  saveLastSlideDimensions?: Function;
-  toggleFullScreen?: any;
+  currentSlide: number;
+  numberOfSlides: number;
+
+  addSlide: Function;
+  goToSlide: Function;
+  saveLastSlideDimensions: Function;
+  toggleFullScreen: Function;
+  updateCurrentPlugin: Function;
 }
 
 class ControlPanelComponent extends React.Component<ControlPanelProps, {}> {
   render() {
     const { 
-      addSlide,
       currentSlide,
-      deleteSlide,
-      goToSlide,
       numberOfSlides,
+      
+      addSlide,
+      goToSlide,
       saveLastSlideDimensions,
-      toggleFullScreen
+      toggleFullScreen,
+      updateCurrentPlugin,
     } = this.props;
 
     return (
-      <div id="control-panel">
-        <Rnd
-          isResizable={{
-            top: false,
-            right: false,
-            bottom: false,
-            left: false,
-            topRight: false,
-            bottomRight: false,
-            bottomLeft: false,
-            topLeft: false
-          }}
-          bounds={{
-            right: 0,
-            left: 0
-          }} >
-          <Button
-            className="pt-large handle-vertical-custom"
-            iconName="drag-handle-vertical" />
-          <Button 
-            className="pt-large"
-            iconName="add"
-            onClick={() => {
-              addSlide(currentSlide);
-              goToSlide(currentSlide + 1);
-            }} />
-          <Button 
-            className="pt-large"
-            iconName="trash"
-            onClick={() => {
-              deleteSlide(currentSlide);
-
-              if (numberOfSlides - 1 < 1) {
-                addSlide();
-                goToSlide(0);
-              } else if (currentSlide === numberOfSlides - 1) {
-                goToSlide(currentSlide - 1);
-              } else {
-                goToSlide(currentSlide);
-              }
-            }} />
-          <Button 
-            className='pt-large'
-            iconName='fullscreen'
-            onClick={() => {
-              const slideElement = document.getElementById('edit-slide-view');
-              const { clientWidth: width, clientHeight: height } = slideElement;
-              saveLastSlideDimensions({ width, height });
-              toggleFullScreen();
-            }} />
-        </Rnd>
+      <div id="control-panel-container">
+        <Button 
+          className="pt-large"
+          iconName="add"
+          onClick={() => {
+            addSlide(currentSlide);
+            goToSlide(currentSlide + 1);
+          }} />
+        <Button 
+          className='pt-large'
+          iconName='fullscreen'
+          onClick={() => {
+            const slideElement = document.getElementById('edit-slide-view');
+            const { clientWidth: width, clientHeight: height } = slideElement;
+            saveLastSlideDimensions({ width, height });
+            toggleFullScreen();
+          }} />
       </div>
     );
   }
@@ -97,6 +63,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   deleteSlide: (currentSlide: number) => dispatch(deleteSlide(currentSlide)),
   goToSlide: (slideNumber: number) => dispatch(goToSlide(slideNumber)),
   saveLastSlideDimensions: (dimensions: { width: number; height: number }) => dispatch(saveLastSlideDimensions(dimensions)),
+  setActivePlugin: () => dispatch(setActivePlugin()),
   toggleFullScreen: () => dispatch(toggleFullScreen()),
 });
 

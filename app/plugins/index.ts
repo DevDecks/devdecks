@@ -1,35 +1,71 @@
 // Need a way to dynmically produce this file
 // Signature: import { plugin } from { location }
 
-import AceEditor from './CodeEditor/CodeEditor';
+import CodeEditor from './CodeEditor/CodeEditor';
+import CodeEditorOptions from './CodeEditor/OptionsMenu';
+
+import Image from './AddImage/AddImage';
+import ImageOptions from './AddImage/OptionsMenu';
+
 import TextBox from './TextBox/TextBox';
-import AddImage from './AddImage/AddImage';
+import TextBoxOptions from './TextBox/OptionsMenu';
 
 // Store last line and export as array?
 export default [
   {
-    name: 'Text Box',
     component: TextBox,
     icon: 'new-text-box',
+    moduleName: 'devdecks-textbox',
+    // change to tooltip
+    name: 'Text Box',
+    optionsMenuComponent: TextBoxOptions,
     state: {
       value: '',
-      width: 300,
+      width: 600,
       height: 200,
     },
   },
   {
-    name: 'Code Editor',
-    component: AceEditor,
-    icon: 'code',
-    state: {
-      value: '',
-      width: 300,
-      height: 200,
-    },
-  },
-  {
-    name: 'Image',
-    component: AddImage,
+    component: Image,
     icon: 'media',
-  }
+    moduleName: 'devdecks-image',
+    // change to tooltip
+    name: 'Image',
+    optionsMenuComponent: ImageOptions,
+    state: {
+      value: '',
+      width: 300,
+      height: 200,
+    },
+  },
+  {
+    component: CodeEditor,
+    icon: 'code',
+    moduleName: 'devdecks-code-editor',
+    // change to tooltip
+    name: 'CodeEditor',
+    optionsMenuComponent: CodeEditorOptions,
+    state: {
+      value: '',
+      width: 800,
+      height: 420,
+    },
+  },
+  // {
+  //   moduleName: 'CodeEditor',
+  //   name: 'Code Editor',
+  //   component: CodeEditor,
+  //   icon: 'code',
+  //   state: {
+  //     value: '',
+  //     width: 300,
+  //     height: 200,
+  //   },
+  // },
+  // {
+  //   moduleName: 'Image',
+  //   name: 'Image',
+  //   component: Image,
+  //   icon: 'media',
+  // }
 ];

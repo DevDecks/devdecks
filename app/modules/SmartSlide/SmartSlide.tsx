@@ -1,15 +1,25 @@
 import * as React from "react";
 import { connect } from 'react-redux';
-import { OptionsBar } from 'modules';
 import { goToSlide, setActivePlugin, toggleGuidelines } from 'actions/app.actions';
 // import { toggleGuidelines } from 'actions/notUndoable.actions';
 import { updateCurrentPlugin } from 'actions/slides.actions';
 import './smart-slide.scss';
+import plugins from 'plugins';
 
 const Rnd = require('react-rnd');
 
+const availablePlugins: any = {};
+
+plugins.forEach(plugin => {
+  availablePlugins[plugin.moduleName] = {
+    component: plugin.component,
+    optionsMenuComponent: plugin.optionsMenuComponent,
+  };
+});
+
 interface SmartSlideProps {
   currentSelectedPlugin?: {
+    moduleName: string;
     pluginNumber: number;
     slideNumber: number;
   };
@@ -37,6 +47,7 @@ class SmartSlide extends React.Component<SmartSlideProps, {}> {
   // when undoing actions with the undo functionality 
   public componentDidUpdate({ slideNumber: _slideNumber }: { slideNumber: number }): void {
     const { currentSelectedPlugin, goToSlide, slide, slideNumber } = this.props;
+    
     if (slideNumber !== _slideNumber) {
       for (const key in this.rnd) {
         if (!this.rnd[key]) return null;
@@ -44,13 +55,18 @@ class SmartSlide extends React.Component<SmartSlideProps, {}> {
         this.rnd[key].updatePosition({ x, y });
       }
     }
+    if (currentSelectedPlugin === null) return null;
     if (slideNumber !== currentSelectedPlugin.slideNumber) { 
       goToSlide(currentSelectedPlugin.slideNumber);
     }
   }
+  public componentWillUpdate({ slideNumber: _slideNumber }: { slideNumber: number }): void {
+    const { currentSelectedPlugin, goToSlide, slide, slideNumber } = this.props;
+    if (!slide) goToSlide(0);
+  }
 
   public render() {
-    const { 
+    const {
       currentSelectedPlugin,
       isInPresenterMode,
       scale,
@@ -61,12 +77,17 @@ class SmartSlide extends React.Component<SmartSlideProps, {}> {
       toggleGuidelines,
       updateCurrentPlugin,
     } = this.props;
-    
+
     return (
       <div id="current-slide-view ">
         {
           slide.plugins.map((plugin: any, key: number) => {
-            const { component: Plugin, state } = plugin;
+            //When plugin is deleted from plugins array, their position is not removed rather the value is set to null
+            if (!plugin) return null;
+
+            const { moduleName, state } = plugin;
+            const Plugin = availablePlugins[moduleName].component;
+            
             return (
               <Rnd
                 key={ key }
@@ -97,10 +118,21 @@ class SmartSlide extends React.Component<SmartSlideProps, {}> {
                 }}
                 moveGrid={[((slidesDimension.width / scale) - state.width)/100, ((slidesDimension.height / scale) - state.height)/100]}
                 onClick={() => {
-                  const { pluginNumber: _pluginNumber, slideNumber: _slideNumber } = currentSelectedPlugin;
-                  if (_slideNumber !== slideNumber || _pluginNumber !== key) setActivePlugin(key, slideNumber);
+                  if (!currentSelectedPlugin) setActivePlugin(plugin.moduleName, key, slideNumber);
+                  else {
+                    const {
+                      pluginNumber: _pluginNumber,
+                      slideNumber: _slideNumber
+                    } = currentSelectedPlugin;
+
+                    if (_slideNumber !== slideNumber || _pluginNumber !== key) setActivePlugin(plugin.moduleName, key, slideNumber);
+                  }
                 }}
-                onResizeStop={(direction: string, styleSize: Object, clientSize: Object) => updateCurrentPlugin(key, slideNumber, clientSize)}
+                onResizeStop={(
+                  direction: string,
+                  styleSize: Object,
+                  clientSize: Object
+                ) => updateCurrentPlugin(key, slideNumber, clientSize)}
                 onDragStart={toggleGuidelines}
                 onDragStop={(e: any, { position }: { position: { left: number; top: number; } }) => {
                   const { left, top } = state;
@@ -109,20 +141,14 @@ class SmartSlide extends React.Component<SmartSlideProps, {}> {
                   if (deltaX > 0 || deltaY > 0) updateCurrentPlugin(key, slideNumber, position);
                   toggleGuidelines();
                 }} >
-                <OptionsBar 
-                  currentSelectedPlugin={ currentSelectedPlugin }
-                  pluginNumber={ key }
-                  pluginState={ state } 
-                  slideNumber={ slideNumber } 
-                  updateCurrentPlugin={ updateCurrentPlugin } />
-                <Plugin 
+                <Plugin
                   width={ state.width }
                   height={ state.height }
                   isInPresenterMode={ isInPresenterMode }
                   pluginNumber={ key }
                   pluginState={ state }
                   slideNumber={ slideNumber }
-                  updateCurrentPlugin={ updateCurrentPlugin } />
+                  updateCurrentPlugin={ updateCurrentPlugin.bind(this, key, slideNumber) } />
               </Rnd>
             );
           })}
@@ -141,9 +167,17 @@ const mapStateToProps = (state: any, props: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   goToSlide: (slideNumber: number) => dispatch(goToSlide(slideNumber)),
-  setActivePlugin: (pluginNumber: number, slideNumber: number) => dispatch(setActivePlugin(pluginNumber, slideNumber)),
+  setActivePlugin: (
+    moduleName: string,
+    pluginNumber: number,
+    slideNumber: number
+    ) => dispatch(setActivePlugin(moduleName, pluginNumber, slideNumber)),
+  updateCurrentPlugin: (
+    pluginNumber: number,
+    slideNumber: number,
+    changes: Object
+  ) => dispatch(updateCurrentPlugin(pluginNumber, slideNumber, changes)),
   toggleGuidelines: () => dispatch(toggleGuidelines()),
-  updateCurrentPlugin: (pluginNumber: number, slideNumber: number, changes: Object) => dispatch(updateCurrentPlugin(pluginNumber, slideNumber, changes)),
 });
 
 const SmartSlideConnect = connect(mapStateToProps, mapDispatchToProps)(SmartSlide as any);

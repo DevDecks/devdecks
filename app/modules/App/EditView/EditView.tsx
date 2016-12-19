@@ -6,10 +6,11 @@ import {
   MiniSlidesPanel,
   SmartSlide,
   ToolBar,
+  UtilitiesMenu,
 } from 'modules';
 
 import { Scale } from 'sharedComponents';
-
+import SettingsMenu from './SettingsMenu/SettingsMenu';
 
 interface IDimensions {
   width: number;
@@ -17,28 +18,49 @@ interface IDimensions {
 }
 
 interface EditViewProps {
+  deviceDimension: IDimensions;
   isDragging: boolean;
   lastSavedSlideDimensions: IDimensions;
   slide: any;
   slidesDimension: IDimensions;
   thumbnailsDimension: IDimensions;
+  updateDeviceDimension: Function;
 }
 
-const EditView = ({ isDragging, lastSavedSlideDimensions, slide, slidesDimension, thumbnailsDimension }: EditViewProps) => {
-  const scale = Math.min( slidesDimension.width / window.screen.width, slidesDimension.height / window.screen.height);
+const EditView = ({
+  deviceDimension,
+  isDragging,
+  lastSavedSlideDimensions,
+  slide,
+  slidesDimension,
+  thumbnailsDimension,
+  updateDeviceDimension,
+}: EditViewProps) => {
+  const EDIT_VIEW_WIDTH = '100vw';
+  const UTILITIES_MENU_WIDTH = 295;
+  
+  const scale = Math.min( slidesDimension.width / deviceDimension.width, slidesDimension.height / deviceDimension.height);
+  const { r, g, b, a } = slide.state.backgroundColor;
+
   return (
     <div id="container">
 
       <MiniSlidesPanel />
       <div id="main-content-wrapper">
-        
-        <ToolBar />
+
+        <div id="menu-bar-wrapper">
+          <ToolBar />
+          <SettingsMenu
+            deviceDimension={ deviceDimension }
+            updateDeviceDimension={ updateDeviceDimension }/>
+        </div>
 
         <div
           id="edit-slide-view"
           style={{
-            width: `calc(100vw - ${thumbnailsDimension.width + 1.25 * 100}px)`,
-            paddingBottom: `${(window.screen.height / window.screen.width) * 100}%`,
+            backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})`,
+            width: `calc(${EDIT_VIEW_WIDTH} - ${UTILITIES_MENU_WIDTH}px - ${thumbnailsDimension.width}px)`,
+            paddingBottom: `${(deviceDimension.height / deviceDimension.width) * 100}%`
           }}>
           <Scale isFullScreen={ false } scale={ scale }>
             <SmartSlide scale={ scale } />
@@ -53,7 +75,7 @@ const EditView = ({ isDragging, lastSavedSlideDimensions, slide, slidesDimension
 
       </div>
 
-      <ControlPanel />
+      <UtilitiesMenu styles={{ width: UTILITIES_MENU_WIDTH }}/>
 
     </div>
   );

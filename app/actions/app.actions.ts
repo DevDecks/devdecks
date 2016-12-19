@@ -1,9 +1,10 @@
 import * as constants from 'constants/app.constants';
 
-export function goToSlide(slideNumber: number) {
+export function goToSlide(slideNumber: number, maxSlides?: number) {
   return {
     type: constants.GO_TO_SLIDE,
     slideNumber,
+    maxSlides,
   };
 }
 
@@ -26,10 +27,11 @@ export function saveLastSlideDimensions(dimensions: { width: number; height: num
   };
 }
 
-export function setActivePlugin(pluginNumber: number, slideNumber: number) {
+export function setActivePlugin(moduleName?: string, pluginNumber?: number, slideNumber?: number) {
+  const isPluginDeleted = !moduleName || pluginNumber === undefined  || slideNumber === undefined;
   return {
     type: constants.SET_ACTIVE_PLUGIN,
-    newActivePlugin: { pluginNumber, slideNumber },
+    newActivePlugin: isPluginDeleted ? null : { moduleName, pluginNumber, slideNumber },
   };
 }
 
