@@ -34,7 +34,7 @@ interface UtilitiesMenuProps extends UtilitiesMenuParentProps {
   pluginState: Object;
   slide: Object;
   slideNumber: number;
-  theme: Object;
+  theme: any;
 
   addThemeColor: Function;
   addSlide: Function;
