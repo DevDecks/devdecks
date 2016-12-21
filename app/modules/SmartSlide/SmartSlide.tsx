@@ -132,8 +132,6 @@ class SmartSlide extends React.Component<SmartSlideProps, {}> {
                   toggleGuidelines();
                 }} >
                 <Plugin
-                  width={ state.width }
-                  height={ state.height }
                   isInPresenterMode={ isInPresenterMode }
                   pluginNumber={ key }
                   pluginState={ state }
