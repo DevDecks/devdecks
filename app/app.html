@@ -8,13 +8,13 @@
     <script>
       (function() {
         if (!process.env.HOT) {
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = './dist/style.css';
-          document.write(link.outerHTML);
+          // const link = document.createElement('link');
+          // link.rel = 'stylesheet';
+          // link.href = './dist/style.css';
+          // document.write(link.outerHTML);
+          Raven.config('https://2d33d28467704bb59075b9c1b7f02da8@sentry.io/123489').install();
         }
       }());
-      Raven.config('https://2d33d28467704bb59075b9c1b7f02da8@sentry.io/123489').install();
     </script>
   </head>
   <body>

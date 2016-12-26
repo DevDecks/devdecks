@@ -1,7 +1,8 @@
-import { cloneDeep } from '../utils/helpers';
 import * as constants from '../constants/slides.constants';
 
+const cloneDeep = require('lodash.clonedeep');
 const undoable = require('redux-undo').default;
+
 interface Slide {
   plugins: any[];
   state: {
@@ -11,6 +12,10 @@ interface Slide {
       b: number;
       a: number;
     };
+    transition: {
+      right: string;
+      left: string;
+    };
   };
 }
 
@@ -18,6 +23,10 @@ const initialSlideState: Slide = {
   plugins: [],
   state: {
     backgroundColor: { r: 255, g: 255, b: 255, a: 100 },
+    transition: {
+      right: 'rotate-push-left-move-from-right',
+      left: 'rotate-push-right-move-from-left',
+    }
   },
 };
 
