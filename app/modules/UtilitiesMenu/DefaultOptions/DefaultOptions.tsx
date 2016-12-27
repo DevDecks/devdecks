@@ -1,5 +1,6 @@
 import * as React from 'react';
 import BackgroundColor from './Options/BackgroundColor';
+import DuplicateSlide from './Options/DuplicateSlide';
 import MoveSlide from './Options/MoveSlide';
 import SelectTransitions from './Options/SelectTransitions';
 import './options.scss';
@@ -11,6 +12,7 @@ interface DefaultOptionsProps {
   theme: Object;
 
   addThemeColor: Function;
+  duplicateSlide: Function;
   goToSlide: Function;
   moveSlideDown: Function;
   moveSlideUp: Function;
@@ -24,6 +26,7 @@ const DefaultOptions = ({
   theme,
 
   addThemeColor,
+  duplicateSlide,
   goToSlide,
   moveSlideDown,
   moveSlideUp,
@@ -31,12 +34,18 @@ const DefaultOptions = ({
 }: DefaultOptionsProps) => (
   <div id="utilities-menu-default-options">
     <MoveSlide
-      currentSlideNumber={ currentSlideNumber }
-      maxSlides={ maxSlides }
-      goToSlide={ goToSlide }
-      moveSlideDown={ moveSlideDown }
-      moveSlideUp={ moveSlideUp } />
+      currentSlideNumber={currentSlideNumber}
+      maxSlides={maxSlides}
+      goToSlide={goToSlide}
+      moveSlideDown={moveSlideDown}
+      moveSlideUp={moveSlideUp} />
     <hr />
+    <DuplicateSlide
+      maxSlides={maxSlides}
+      slide={slide}
+      duplicateSlide={duplicateSlide}
+      goToSlide={goToSlide} />
+    <hr/>
     <BackgroundColor
       slide={ slide }
       theme={ theme }

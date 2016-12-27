@@ -9,6 +9,7 @@ import {
   goToSlide,
   leftArrowPrev,
   rightArrowNext,
+  setActivePlugin,
   toggleFullScreen,
   updateDeviceDimension,
   updateSlidesDimension,
@@ -16,6 +17,8 @@ import {
 
 import {
   addSlide,
+  deleteSlide,
+  duplicateSlide,
   moveSlideDown,
   moveSlideUp,
   openFile,
@@ -49,6 +52,8 @@ interface AppComponentProps {
   slidesDimension: IDimensions;
 
   addSlide: Function;
+  deleteSlide: Function;
+  duplicateSlide: Function;
   goToSlide: Function;
   leftArrowPrev: Function;
   moveSlideDown: Function;
@@ -56,6 +61,7 @@ interface AppComponentProps {
   openFile: Function;
   openNewDeck: Function;
   rightArrowNext: Function;
+  setActivePlugin: Function;
   toggleFullScreen: any;
   updateDeviceDimension: Function;
   updateSlidesDimension: Function;
@@ -72,6 +78,8 @@ class AppComponent extends React.Component<AppComponentProps, AppComponentStates
   public constructor() {
     super();
     this.handleAddSlide = this.handleAddSlide.bind(this);
+    this.handleDeleteSlide = this.handleDeleteSlide.bind(this);
+    this.handleDuplicateSlide = this.handleDuplicateSlide.bind(this);
     this.handleMoveSlideDown = this.handleMoveSlideDown.bind(this);
     this.handleMoveSlideUp = this.handleMoveSlideUp.bind(this);
     this.handleNewDeck = this.handleNewDeck.bind(this);
@@ -90,6 +98,28 @@ class AppComponent extends React.Component<AppComponentProps, AppComponentStates
     const { addSlide, goToSlide, slideNumber } = this.props;
     addSlide(slideNumber);
     goToSlide(slideNumber + 1);
+  }
+
+  private handleDeleteSlide() {
+    const { maxSlides, slideNumber, addSlide, deleteSlide, goToSlide, setActivePlugin } = this.props;
+    setActivePlugin();
+    if (maxSlides - 1 < 1) {
+      addSlide();
+      deleteSlide(slideNumber - 1);
+      goToSlide(0);
+    } else if (slideNumber === maxSlides - 1) {
+      goToSlide(maxSlides - 2);
+      deleteSlide(slideNumber);
+    } else {
+      deleteSlide(slideNumber);
+      goToSlide(slideNumber);
+    }
+  }
+
+  private handleDuplicateSlide() {
+    const { maxSlides, slide, duplicateSlide, goToSlide } = this.props;
+    duplicateSlide(slide);
+    goToSlide(maxSlides);
   }
 
   private handleMoveSlideDown() {
@@ -115,21 +145,21 @@ class AppComponent extends React.Component<AppComponentProps, AppComponentStates
       noLink: true,
     }
     remote.dialog.showMessageBox(options, (response: number) => {
-      if (response === 0) return console.log('0 pressed!!');
-      if (response === 1) { 
+      if (response === 0) return;
+      if (response === 1) {
         goToSlide(0);
         openNewDeck();
         clearHist();
-        return console.log('1 pressed!!');
+        return;
       }
       if (response === 2) {
         goToSlide(0);
         this.handleSaveFile();
         openNewDeck();
-        return console.log('2 pressed!!');
+        clearHist();
+        return;
       }
-    })
-
+    });
   }
 
   private handleResize(): void {
@@ -229,6 +259,8 @@ class AppComponent extends React.Component<AppComponentProps, AppComponentStates
   public componentWillMount() {
     const { toggleFullScreen, redo, undo } = this.props;
     ipcRenderer.on('addSlide', this.handleAddSlide);
+    ipcRenderer.on('deleteSlide', this.handleDeleteSlide);
+    ipcRenderer.on('duplicateSlide', this.handleDuplicateSlide);
     ipcRenderer.on('moveSlideDown', this.handleMoveSlideUp);
     ipcRenderer.on('moveSlideUp', this.handleMoveSlideDown);
     ipcRenderer.on('newDeck', this.handleNewDeck);
@@ -315,6 +347,8 @@ const mapStateToProps= (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
   addSlide: (currentSlide: number) => dispatch(addSlide(currentSlide)),
+  deleteSlide: (currentSlide: number) => dispatch(deleteSlide(currentSlide)),
+  duplicateSlide: (slideToDuplicate: Object) => dispatch(duplicateSlide(slideToDuplicate)),
   goToSlide: (slideNumber: number, maxSlides: number) => dispatch(goToSlide(slideNumber, maxSlides)),
   moveSlideDown: (slideNumber: number) => dispatch(moveSlideDown(slideNumber)),
   moveSlideUp: (slideNumber: number) => dispatch(moveSlideUp(slideNumber)),
@@ -322,6 +356,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   openFile: (newStateFromFile: Object) => dispatch(openFile(newStateFromFile)),
   openNewDeck: () => dispatch(openNewDeck()),
   rightArrowNext: () => dispatch(rightArrowNext()),
+  setActivePlugin: () => dispatch(setActivePlugin()),
   toggleFullScreen: () => dispatch(toggleFullScreen()),
   updateDeviceDimension: (
     newDeviceDimension: {
